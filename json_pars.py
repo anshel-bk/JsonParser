@@ -14,18 +14,20 @@ def get_json_info(json_f):
 
 def get_coords(shapes):
     coords = []
-    for i,shape in enumerate(shapes):
-        coords_face_part = shape.get("points")
-        label_face_part = shape.get("label")
-        print(coords_face_part,label_face_part)
+    requirements_parts = ['face', 'lefteye', 'righteye', 'face', 'lefteye', 'righteye', 'nose', 'leftmouth',
+                          'rightmouth', 'nose', 'leftmouth', 'rightmouth']
+    ind = 0
+    for i,shape in enumerate(requirements_parts):
+        coords_face_part = shapes[i-ind].get("points")
+        label_face_part = shapes[i-ind].get("label")
         if label_face_part == "face":
             coords_face_part= format_face(coords_face_part)
-        elif label_face_part:
+        elif label_face_part == requirements_parts[i]:
             coords_face_part = ' '.join([' '.join([str(coord) for coord in coords]) for coords in coords_face_part])
         else:
-            coords_face_part = -1.0
+            coords_face_part = '-1.0'
+            ind += 1
         coords.append(coords_face_part)
-        print(coords_face_part)
     coords = ' -0.1 '.join(coords)
     coords += " 1.0"
     return coords
@@ -47,7 +49,7 @@ def format_face(coords):
 
 
 def write_info(coords, image_path, count):
-    with open("test_result.txt", "w", encoding="utf-8") as result:
+    with open("test_result.txt", "a+", encoding="utf-8") as result:
         try:
             result.write(image_path + "\n")
             result.write(coords + "\n")
