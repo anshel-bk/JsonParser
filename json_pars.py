@@ -14,17 +14,40 @@ def get_json_info(json_f):
 
 def get_coords(shapes):
     coords = []
-    for shape in shapes:
+    for i,shape in enumerate(shapes):
         coords_face_part = shape.get("points")
-        coords_face_part = ' '.join([' '.join([str(coord) for coord in coords]) for coords in coords_face_part])
+        label_face_part = shape.get("label")
+        print(coords_face_part,label_face_part)
+        if label_face_part == "face":
+            coords_face_part= format_face(coords_face_part)
+        elif label_face_part:
+            coords_face_part = ' '.join([' '.join([str(coord) for coord in coords]) for coords in coords_face_part])
+        else:
+            coords_face_part = -1.0
         coords.append(coords_face_part)
+        print(coords_face_part)
     coords = ' -0.1 '.join(coords)
     coords += " 1.0"
     return coords
 
 
+def format_face(coords):
+    result = ""
+    x = []
+    y = []
+    for coord in coords:
+        x.append(coord[0])
+        y.append(coord[1])
+    xmin = min(x)
+    ymin = min(y)
+    xmax = max(x)
+    ymax = max(y)
+    result = f"xmin ={round(xmin,3)}  ymin ={round(ymin,3)} xraznica ={int(xmax-xmin)}  yraznica ={int(ymax-ymin)} xmax ={round(xmax,3)} ymax ={round(ymax,3)}"
+    return result
+
+
 def write_info(coords, image_path, count):
-    with open("test_result.txt", "a+", encoding="utf-8") as result:
+    with open("test_result.txt", "w", encoding="utf-8") as result:
         try:
             result.write(image_path + "\n")
             result.write(coords + "\n")
