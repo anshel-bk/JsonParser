@@ -27,7 +27,7 @@ def get_coords(shapes):
             coords_face_part = format_face(coords_face_part)
             ind += 1
         elif label_face_part == requirements_parts[i]:
-            coords_face_part = ' '.join([' '.join([str(coord) for coord in coords]) for coords in coords_face_part])
+            coords_face_part = ' '.join([' '.join([str(round(coord,3)) for coord in coords]) for coords in coords_face_part])
             ind += 1
         else:
             coords_face_part = '-1.0'
