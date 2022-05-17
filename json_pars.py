@@ -1,7 +1,7 @@
 import json
 import os
 
-path = os.path.dirname(os.path.abspath(__file__))+"\jsons_lists" # прописываешь абсолютный путь до папки с джсонами
+path = os.path.dirname(os.path.abspath(__file__)) + "\jsons_lists"  # прописываешь абсолютный путь до папки с джсонами
 list_jsons = [file for file in os.listdir(path)]
 
 
@@ -17,16 +17,20 @@ def get_coords(shapes):
     requirements_parts = ['face', 'lefteye', 'righteye', 'face', 'lefteye', 'righteye', 'nose', 'leftmouth',
                           'rightmouth', 'nose', 'leftmouth', 'rightmouth']
     ind = 0
-    for i,shape in enumerate(requirements_parts):
-        coords_face_part = shapes[i-ind].get("points")
-        label_face_part = shapes[i-ind].get("label")
+    for i, shape in enumerate(requirements_parts):
+        if ind > len(shapes) - 1:
+            break
+        coords_face_part = shapes[ind].get("points")
+        label_face_part = shapes[ind].get("label")
+        print(label_face_part, requirements_parts[i])
         if label_face_part == "face":
-            coords_face_part= format_face(coords_face_part)
+            coords_face_part = format_face(coords_face_part)
+            ind += 1
         elif label_face_part == requirements_parts[i]:
             coords_face_part = ' '.join([' '.join([str(coord) for coord in coords]) for coords in coords_face_part])
+            ind += 1
         else:
             coords_face_part = '-1.0'
-            ind += 1
         coords.append(coords_face_part)
     coords = ' -0.1 '.join(coords)
     coords += " 1.0"
@@ -44,7 +48,7 @@ def format_face(coords):
     ymin = min(y)
     xmax = max(x)
     ymax = max(y)
-    result = f"xmin ={round(xmin,3)}  ymin ={round(ymin,3)} xraznica ={int(xmax-xmin)}  yraznica ={int(ymax-ymin)} xmax ={round(xmax,3)} ymax ={round(ymax,3)}"
+    result = f"xmin ={round(xmin, 3)}  ymin ={round(ymin, 3)} xraznica ={int(xmax - xmin)}  yraznica ={int(ymax - ymin)} xmax ={round(xmax, 3)} ymax ={round(ymax, 3)}"
     return result
 
 
